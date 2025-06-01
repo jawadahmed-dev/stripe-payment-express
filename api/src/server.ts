@@ -1,11 +1,12 @@
 // src/server.ts
+import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+dotenv.config();
 import connectDB from './config/db';
 import paymentMethodRoutes from './presentation/routes/payment-method.routes'
 
-dotenv.config();
 
 const app = express();
 

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { injectable, inject } from 'inversify';
 import AddPaymentMethodUseCase, { AddPaymentMethodRequest, AddPaymentMethodResponse } from '../../application/use-cases/add-payment-method';
 import GetPaymentMethodsUseCase, { GetPaymentMethodsByUserIdRequest, GetPaymentMethodsByUserIdResponse } from '../../application/use-cases/get-payment-method-by-userid';
 import GetPaymentMethodsByUserIdUseCase from '../../application/use-cases/get-payment-method-by-userid';
 import TYPES from '../../config/types';
+import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export default class PaymentMethodsController {

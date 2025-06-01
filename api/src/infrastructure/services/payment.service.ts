@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { IPaymentService } from "../../application/interfaces/payment.service";
 import PaymentMethod from "../../domain/entities/payment-method";
 import { PaymentMethodMapper } from "../mappers/payment-method.mapper";
-import { injectable } from "inversify";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class PaymentService implements IPaymentService {

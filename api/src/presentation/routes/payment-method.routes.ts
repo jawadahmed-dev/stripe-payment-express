@@ -1,12 +1,16 @@
 import { Router } from 'express';
-import container from '../../config/container';
+import { container } from '../../config/container';
+import TYPES from '../../config/types'; // import your TYPES object
 import PaymentMethodsController from '../controllers/payment-methods.controller';
 
-
 const router = Router();
-const controller = container.get<PaymentMethodsController>(Symbol.for('PaymentMethodsController'));
 
-// Routes for payment methods
+// Resolve controller using tsyringe container and TYPES token
+const controller = container.resolve<PaymentMethodsController>(
+  TYPES.PaymentMethodsController
+);
+
+// Define routes
 router.post('/', controller.addPaymentMethod.bind(controller));
 router.get('/:userId', controller.getPaymentMethods.bind(controller));
 

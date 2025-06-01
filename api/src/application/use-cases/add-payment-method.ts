@@ -1,8 +1,6 @@
-import { inject, injectable } from "inversify";
 import { IPaymentMethodRepository} from "../interfaces/payment-method.repository";
 import { IPaymentService } from "../interfaces/payment.service";
 import { PaymentMethodMapper } from "../mappers/payment-method.mapper";
-import TYPES from "../../config/types";
 
 
 export interface AddPaymentMethodRequest {
@@ -22,11 +20,10 @@ export interface AddPaymentMethodResponse {
   brand: string | undefined;
 }
 
-@injectable()
 export default class AddPaymentMethodUseCase {
   constructor(
-    @inject(TYPES.PaymentRepository) private readonly paymentMethodRepository: IPaymentMethodRepository,
-    @inject(TYPES.StripeService) private readonly paymentService: IPaymentService
+    private readonly paymentMethodRepository: IPaymentMethodRepository,
+    private readonly paymentService: IPaymentService
   ) {}
 
   async execute(request : AddPaymentMethodRequest): Promise<AddPaymentMethodResponse> {

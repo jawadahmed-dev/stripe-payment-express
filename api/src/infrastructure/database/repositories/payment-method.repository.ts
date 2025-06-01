@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable } from "tsyringe";
 import { IPaymentMethodRepository } from "../../../application/interfaces/payment-method.repository";
 import PaymentMethod from "../../../domain/entities/payment-method";
 import { PaymentMethodMapper } from "../../mappers/payment-method.mapper";
