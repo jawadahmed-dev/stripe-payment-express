@@ -1,30 +1,36 @@
-export default class PaymentMethod {
-  public id: string;
+import { PaymentMethodType } from '../enums/payment-method.enum';
+import { BaseEntity } from './base.entity';
+
+export default class PaymentMethod extends BaseEntity {
   public userId: string;
-  public type: string;
-  public last4?: string;
-  public brand?: string;
-  public expMonth?: number;
-  public expYear?: number;
-  public createdAt: Date | number;
+  public customerId: string;
+  public type: PaymentMethodType;
+  public last4: string;
+  public brand: string;
+  public expMonth: number;
+  public expYear: number;
+  public isDefault: boolean = true;
 
   constructor(params: {
     id: string;
     userId: string;
-    type: string;
-    last4?: string;
-    brand?: string;
-    expMonth?: number;
-    expYear?: number;
-    createdAt: Date | number;
+    customerId: string;
+    type: PaymentMethodType;
+    last4: string;
+    brand: string;
+    expMonth: number;
+    expYear: number;
+    createdAt: Date
   }) {
-    this.id = params.id;
+    super(params);
     this.userId = params.userId;
+    this.customerId = params.customerId;
     this.type = params.type;
     this.last4 = params.last4;
     this.brand = params.brand;
     this.expMonth = params.expMonth;
     this.expYear = params.expYear;
-    this.createdAt = params.createdAt;
   }
+
+  
 }

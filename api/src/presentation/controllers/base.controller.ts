@@ -5,12 +5,12 @@ import { ApiResponse } from '../utils/api-response';
 
 export abstract class BaseController {
   protected ok<T>(res: Response, data: T, message?: string) {
-    const response = ApiResponse.success(data, message);
+    const response = ApiResponse.success(data, message ?? "success");
     res.status(response.statusCode).json(response);
   }
 
   protected created<T>(res: Response, data: T, message?: string) {
-    const response = ApiResponse.created(data, message);
+    const response = ApiResponse.created(data, message ?? "success");
     res.status(response.statusCode).json(response);
   }
 

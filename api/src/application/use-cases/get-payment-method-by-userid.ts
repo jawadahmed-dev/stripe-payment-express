@@ -1,3 +1,4 @@
+import { PaymentMethodType } from "../../domain/enums/payment-method.enum";
 import { IPaymentMethodRepository } from "../interfaces/payment-method.repository";
 import { PaymentMethodMapper } from "../mappers/payment-method.mapper";
 
@@ -11,7 +12,7 @@ export interface GetPaymentMethodsByUserIdResponse {
   brand?: string;
   expMonth?: number;
   expYear?: number;
-  type: string;
+  type: PaymentMethodType;
 }
 
 export default class GetPaymentMethodsByUserIdUseCase {

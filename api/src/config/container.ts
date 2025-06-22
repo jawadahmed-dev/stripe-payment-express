@@ -1,7 +1,7 @@
 // src/config/container.ts
 import { IPaymentMethodRepository } from "../application/interfaces/payment-method.repository";
 import { IPaymentService } from "../application/interfaces/payment.service";
-import { PaymentService } from "../infrastructure/services/payment.service";
+import { PaymentService } from "../infrastructure/stripe/services/payment.service";
 import { PaymentMethodRepository } from "../infrastructure/database/repositories/payment-method.repository";
 import AddPaymentMethodUseCase from "../application/use-cases/add-payment-method";
 import PaymentMethodsController from "../presentation/controllers/payment-methods.controller";

@@ -5,13 +5,8 @@ import { PaymentMethodMapper } from "../mappers/payment-method.mapper";
 
 export interface AddPaymentMethodRequest {
   userId: string;
-  paymentMethodToken: string;
-  type: string;
-  last4?: string;
-  brand?: string;
-  expMonth?: number;
-  expYear?: number;
-  createdAt: Date;
+  customerId:string;
+  paymentMethodId: string;
 }
 
 export interface AddPaymentMethodResponse {
@@ -28,21 +23,16 @@ export default class AddPaymentMethodUseCase {
 
   async execute(request : AddPaymentMethodRequest): Promise<AddPaymentMethodResponse> {
 
-    const {userId, paymentMethodToken} = request;
+    const {customerId, paymentMethodId, userId} = request;
 
-    if (!userId || !paymentMethodToken) {
-      throw new Error('Missing required fields: userId, paymentMethodToken');
-    }
-
-    const paymentMethodEntityToCreate = await this.paymentService.attachPaymentMethod(
-      userId,
-      paymentMethodToken
+    const stripePaymentMethod = await this.paymentService.attachPaymentMethod(
+      customerId,
+      paymentMethodId
     );
 
-    if (!paymentMethodEntityToCreate.isValid()) throw new Error('Invalid payment method data');
-
-    const createdPaymentMethodEntity = await this.paymentMethodRepository.create(paymentMethodEntityToCreate);
-    const response = PaymentMethodMapper.toAddPaymentMethodResponse(createdPaymentMethodEntity);
+    const paymentMethodToCreate =  PaymentMethodMapper.fromDTO(stripePaymentMethod, userId);
+    const createdPaymentMethod = await this.paymentMethodRepository.create(paymentMethodToCreate);
+    const response = PaymentMethodMapper.toAddPaymentMethodResponse(createdPaymentMethod);
 
     return response;
   }
