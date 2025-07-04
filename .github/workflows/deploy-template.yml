@@ -1,0 +1,36 @@
+name: Reusable Deploy Template
+
+on:
+  workflow_call:
+    inputs:
+      imageTag:
+        required: true
+        type: string
+      containerAppName:
+        required: true
+        type: string
+      resourceGroup:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+      ACR_LOGIN_SERVER:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure Container App
+      run: |
+        az containerapp update \
+          --name ${{ inputs.containerAppName }} \
+          --resource-group ${{ inputs.resourceGroup }} \
+          --image ${{ secrets.ACR_LOGIN_SERVER }}/nodeapp:${{ inputs.imageTag }}
