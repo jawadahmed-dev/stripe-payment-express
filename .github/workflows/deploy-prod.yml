@@ -1,0 +1,23 @@
+name: Deploy to Prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      imageTag:
+        description: 'Image tag to deploy'
+        required: true
+
+jobs:
+  deploy:
+    environment:
+      name: prod
+      url: https://your-prod-url  # optional
+
+    uses: ./.github/workflows/templates/deploy-template.yml
+    with:
+      imageTag: ${{ github.event.inputs.imageTag }}
+      containerAppName: my-nodeapp-prod
+      resourceGroup: rg-nodeapp-prod
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS_PROD }}
+      ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
