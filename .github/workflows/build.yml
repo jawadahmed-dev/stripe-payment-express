@@ -1,0 +1,10 @@
+name: Build Node App
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    uses: ./.github/workflows/templates/build-template.yml
+      
