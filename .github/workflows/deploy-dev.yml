@@ -9,12 +9,47 @@ on:
         default: 'latest'
 
 jobs:
-  deploy:
-    uses: ./.github/workflows/templates/deploy-template.yml
-    with:
+  resource_creation:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    outputs:
       imageTag: ${{ github.event.inputs.imageTag }}
-      containerAppName: my-nodeapp-dev
-      resourceGroup: rg-nodeapp-dev
-    secrets:
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS_DEV }}
-      ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create Azure resources
+        uses: ./.github/workflows/resource-creation.yml
+        with:
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          environmentName: dev
+          imageTag: ${{ github.event.inputs.imageTag }}
+          location: ${{ env.LOCATION }}
+          registryUsername: ${{ env.REGISTRY_USERNAME }}
+          apiUrl: ${{ env.API_URL }}
+        secrets:
+          registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: resource_creation
+    environment: dev
+
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy app
+        uses: ./.github/workflows/deploy-template.yml
+        with:
+          imageTag: ${{ needs.resource_creation.outputs.imageTag }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}

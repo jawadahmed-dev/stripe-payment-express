@@ -1,34 +1,36 @@
+# .github/workflows/build-template.yml
+
 name: Reusable Build Template
 
 on:
   workflow_call:
+    inputs:
+      imageTag:
+        required: true
+        type: string
     outputs:
       imageTag:
-        description: "Image tag built"
-        value: ${{ jobs.build.outputs.imageTag }}
+        description: 'Image tag built'
+        value: ${{ inputs.imageTag }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      imageTag: ${{ steps.set-tag.outputs.tag }}
+      imageTag: ${{ inputs.imageTag }}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set image tag
-      id: set-tag
-      run: echo "tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ env.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - name: Login to ACR
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
-
-    - name: Build and push image
-      run: |
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/nodeapp:${{ github.sha }} .
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/nodeapp:${{ github.sha }}
+      - name: Build and push Docker image
+        run: |
+          docker build -t ghcr.io/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }} .
+          docker push ghcr.io/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }}
