@@ -2,29 +2,42 @@ name: Build and Push Docker Image
 description: Logs in to GHCR, builds and pushes the image
 
 inputs:
+  imageName:
+    required: true
+    description: Name for the Docker image
+
   imageTag:
     required: true
     description: Tag for the Docker image
 
+  registryUrl:
+    required: true
+    description: GitHub Container Registry URL (e.g., ghcr.io)
+
+  registryUsername:
+    required: true
+    description: GitHub Container Registry username (usually your GitHub username or org)
+
+  registryPassword:
+    required: true
+    description: GitHub Container Registry password or PAT
+
 runs:
   using: "composite"
   steps:
-    - name: Debug env vars
-      run: |
-        echo "REGISTRY_URL: ${{ env.REGISTRY_URL }}"
-        echo "REGISTRY_USERNAME: ${{ env.REGISTRY_USERNAME }}"
-      shell: bash
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
-        registry: ${{ env.REGISTRY_URL }}
-        username: ${{ env.REGISTRY_USERNAME }}
-        password: ${{ env.REGISTRY_PASSWORD }}
+        registry: ${{ inputs.registryUrl }}
+        username: ${{ inputs.registryUsername }}
+        password: ${{ inputs.registryPassword }}
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/payapp:${{ inputs.imageTag }} \
-        -f api/Dockerfile api/
-        docker push ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/payapp:${{ inputs.imageTag }}
+        docker build -t ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${inputs.imageName}:${{ inputs.imageTag }} \
+          -f api/Dockerfile api/
+        docker push ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${inputs.imageName}:${{ inputs.imageTag }}
       shell: bash
