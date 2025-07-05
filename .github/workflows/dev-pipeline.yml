@@ -46,6 +46,7 @@ jobs:
           location: ${{ vars.LOCATION }}
           registryUsername: ${{ vars.REGISTRY_USERNAME }}
           apiUrl: ${{ vars.API_URL }}
+          azureCredentials: ${{ secrets.AZURE_CREDENTIALS }}
 
   deploy:
     runs-on: ubuntu-latest

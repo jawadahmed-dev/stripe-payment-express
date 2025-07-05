@@ -14,6 +14,8 @@ inputs:
     required: true
   apiUrl:
     required: true
+  azureCredentials:
+    required: true
 
 runs:
   using: "composite"
@@ -21,10 +23,7 @@ runs:
     - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
+        creds: ${{ inputs.AZURE_CREDENTIALS }}
 
     - name: Deploy resources with Bicep
       run: |
