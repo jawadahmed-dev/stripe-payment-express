@@ -11,6 +11,6 @@ jobs:
 
     steps:
       - name: Run reusable Docker build action
-        uses: ./.github/actions/build-docker.yml
+        uses: ./.github/actions/build-docker
         with:
           imageTag: latest
