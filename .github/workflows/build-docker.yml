@@ -1,0 +1,26 @@
+name: Build and Push Docker Image
+description: Logs in to GHCR, builds and pushes the image
+
+inputs:
+  imageTag:
+    required: true
+    description: Tag for the Docker image
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY_URL }}
+        username: ${{ env.REGISTRY_USERNAME }}
+        password: ${{ env.REGISTRY_PASSWORD }}
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t ghcr.io/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }} .
+        docker push ghcr.io/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }}
+      shell: bash
