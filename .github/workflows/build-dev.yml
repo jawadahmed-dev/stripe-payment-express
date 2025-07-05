@@ -10,6 +10,9 @@ jobs:
     environment: dev  
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run reusable Docker build action
         uses: ./.github/actions/build-docker
         with:
