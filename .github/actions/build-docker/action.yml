@@ -9,6 +9,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Debug env vars
+      run: |
+        echo "REGISTRY_URL: ${{ env.REGISTRY_URL }}"
+        echo "REGISTRY_USERNAME: ${{ env.REGISTRY_USERNAME }}"
+      shell: bash
+
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
