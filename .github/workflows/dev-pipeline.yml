@@ -35,6 +35,9 @@ jobs:
     needs: build
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - uses: ./.github/actions/create-resources
         with:
           containerAppName: ${{ vars.CONTAINER_APP_NAME }}
@@ -50,6 +53,9 @@ jobs:
     needs: provision
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - uses: ./.github/actions/deploy-app
         with:
           containerAppName: ${{ vars.CONTAINER_APP_NAME }}
