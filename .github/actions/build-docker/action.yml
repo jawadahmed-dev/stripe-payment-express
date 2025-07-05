@@ -37,7 +37,7 @@ runs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${inputs.imageName}:${{ inputs.imageTag }} \
+        docker build -t ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${{inputs.imageName}}:${{ inputs.imageTag }} \
           -f api/Dockerfile api/
-        docker push ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${inputs.imageName}:${{ inputs.imageTag }}
+        docker push ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${{inputs.imageName}}:${{ inputs.imageTag }}
       shell: bash
