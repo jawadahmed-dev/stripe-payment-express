@@ -1,15 +1,16 @@
-# .github/workflows/build-dev.yml
-
 name: Build Node App (Dev)
 
 on:
-  workflow_dispatch:
   push:
     branches: [main]
 
 jobs:
   build:
-    uses: ./.github/workflows/build-template.yml
-    with:
-      imageTag: latest
-    environment: dev  # 👈 This activates the 'dev' environment (for secrets + env vars)
+    runs-on: ubuntu-latest
+    environment: dev  
+
+    steps:
+      - name: Run reusable Docker build action
+        uses: ./.github/actions/build-docker.yml
+        with:
+          imageTag: latest
