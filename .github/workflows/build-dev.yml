@@ -7,12 +7,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: dev  
+    environment: Dev  
     env:
       REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-      
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
