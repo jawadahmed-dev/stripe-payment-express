@@ -24,6 +24,7 @@ runs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ghcr.io/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }} .
-        docker push ghcr.io/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }}
+        docker build -t ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }} \
+          -f ../../../api/Dockerfile .
+        docker push ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/nodeapp:${{ inputs.imageTag }}
       shell: bash
