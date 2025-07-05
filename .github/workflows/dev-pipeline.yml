@@ -35,7 +35,7 @@ jobs:
     needs: build
 
     steps:
-      - uses: ./.github/actions/resource-create
+      - uses: ./.github/actions/create-resource
         with:
           containerAppName: ${{ vars.CONTAINER_APP_NAME }}
           environmentName: ${{ vars.CONTAINER_APP_ENV }}
