@@ -1,0 +1,43 @@
+name: Create Azure Resources
+description: Deploy infrastructure using Bicep
+
+inputs:
+  resourceGroup:
+    required: true
+  containerAppName:
+    required: true
+  environmentName:
+    required: true
+  imageTag:
+    required: true
+  registryUsername:
+    required: true
+  apiUrl:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Deploy resources with Bicep
+      run: |
+        az deployment group create \
+          --resource-group ${{ inputs.resourceGroup }} \
+          --template-file infra/main.bicep \
+          --parameters containerAppName=${{ inputs.containerAppName }} \
+                       environmentName=${{ inputs.environmentName }} \
+                       image="ghcr.io/${{ github.repository_owner }}/payapp:${{ inputs.imageTag }}" \
+                       registryUsername=${{ inputs.registryUsername }} \
+                       registryPassword=${{ secrets.REGISTRY_PASSWORD }} \
+                       appSettings='{
+                         "NODE_ENV": "production",
+                         "API_URL": "${{ inputs.apiUrl }}"
+                       }'
+      shell: bash

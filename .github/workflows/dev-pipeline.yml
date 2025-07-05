@@ -1,0 +1,53 @@
+name: CI/CD Pipeline - Dev
+
+on:
+  push:
+    branches: [main]
+
+env:
+  IMAGE_TAG: latest
+  IMAGE_NAME: payapp
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    outputs:
+      imageTag: ${{ vars.IMAGE_TAG }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        uses: ./.github/actions/build-docker
+        with:
+          imageTag: ${{ vars.IMAGE_TAG }}
+
+  provision:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: build
+
+    steps:
+      - uses: ./.github/actions/resource-create
+        with:
+          containerAppName: ${{ vars.CONTAINER_APP_NAME }}
+          environmentName: ${{ vars.CONTAINER_APP_ENV }}
+          imageTag: ${{ needs.build.outputs.imageTag }}
+          location: ${{ vars.LOCATION }}
+          registryUsername: ${{ vars.REGISTRY_USERNAME }}
+          apiUrl: ${{ vars.API_URL }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: provision
+
+    steps:
+      - uses: ./.github/actions/deploy-app
+        with:
+          containerAppName: ${{ vars.CONTAINER_APP_NAME }}
+          resourceGroup: ${{ vars.RESOURCE_GROUP }}
+          imageTag: ${{ needs.build.outputs.imageTag }}

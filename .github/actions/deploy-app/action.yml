@@ -1,0 +1,26 @@
+name: Deploy to Azure Container App
+description: Deploy updated image to Azure Container App
+
+inputs:
+  containerAppName:
+    required: true
+  resourceGroup:
+    required: true
+  imageTag:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure Container App
+      run: |
+        az containerapp update \
+          --name ${{ inputs.containerAppName }} \
+          --resource-group ${{ inputs.resourceGroup }} \
+          --image ghcr.io/${{ github.repository_owner }}/payapp:${{ inputs.imageTag }}
+      shell: bash
