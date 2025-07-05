@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: Dev  
     env:
-      REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
-      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_URL: ${{ env.REGISTRY_URL }}
+      REGISTRY_USERNAME: ${{ env.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
     steps:
