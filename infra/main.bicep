@@ -25,7 +25,7 @@ param appSettings object = {}
 @description('Azure location')
 param location string = resourceGroup().location
 
-module containerapp '.modules/containerapp.bicep' = {
+module containerapp 'modules/containerapp.bicep' = {
   name: 'containerapp'
   params: {
     location: location
