@@ -26,7 +26,7 @@ jobs:
         with:
           imageTag: ${{ env.IMAGE_TAG }}
           imageName: ${{ env.IMAGE_NAME }}
-          registryUrl: ${{ vars.REGISTRY_URL }}
+          registryServer: ${{ vars.REGISTRY_SERVER }}
           registryUsername: ${{ vars.REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
 

@@ -10,7 +10,7 @@ inputs:
     required: true
     description: Tag for the Docker image
 
-  registryUrl:
+  registryServer:
     required: true
     description: GitHub Container Registry URL (e.g., ghcr.io)
 
@@ -31,13 +31,13 @@ runs:
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
-        registry: ${{ inputs.registryUrl }}
+        registry: ${{ inputs.registryServer }}
         username: ${{ inputs.registryUsername }}
         password: ${{ inputs.registryPassword }}
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${{inputs.imageName}}:${{ inputs.imageTag }} \
+        docker build -t ${{ inputs.registryServer }}/${{ inputs.registryUsername }}/${{inputs.imageName}}:${{ inputs.imageTag }} \
           -f api/Dockerfile api/
-        docker push ${{ inputs.registryUrl }}/${{ inputs.registryUsername }}/${{inputs.imageName}}:${{ inputs.imageTag }}
+        docker push ${{ inputs.registryServer }}/${{ inputs.registryUsername }}/${{inputs.imageName}}:${{ inputs.imageTag }}
       shell: bash
