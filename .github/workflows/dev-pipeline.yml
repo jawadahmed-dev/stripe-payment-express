@@ -65,3 +65,6 @@ jobs:
           containerAppName: ${{ vars.CONTAINER_APP_NAME }}
           resourceGroup: ${{ vars.RESOURCE_GROUP }}
           imageTag: ${{ needs.build.outputs.imageTag }}
+          azureCredentials: ${{ secrets.AZURE_CREDENTIALS }}
+          registryServer: ${{ vars.REGISTRY_SERVER }}
+          registryUsername: ${{ vars.REGISTRY_USERNAME }}
