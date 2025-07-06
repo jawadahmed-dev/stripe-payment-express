@@ -38,8 +38,5 @@ runs:
                        image="ghcr.io/${{ inputs.registryUsername }}/payapp:${{ inputs.imageTag }}" \
                        registryUsername=${{ inputs.registryUsername }} \
                        registryPassword=${{ inputs.registryPassword }} \
-                       registryServer=${{ inputs.registryServer }} \
-                       appSettings='{
-                         "NODE_ENV": "develop"
-                       }'
+                       registryServer=${{ inputs.registryServer }} 
       shell: bash
