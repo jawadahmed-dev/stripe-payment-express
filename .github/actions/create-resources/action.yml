@@ -14,8 +14,6 @@ inputs:
     required: true
   registryPassword:
     required: true
-  apiUrl:
-    required: true
   azureCredentials:
     required: true
 
@@ -43,7 +41,6 @@ runs:
                        registryUsername=${{ inputs.registryUsername }} \
                        registryPassword=${{ inputs.registryPassword }} \
                        appSettings='{
-                         "NODE_ENV": "develop",
-                         "API_URL": "${{ inputs.apiUrl }}"
+                         "NODE_ENV": "develop"
                        }'
       shell: bash

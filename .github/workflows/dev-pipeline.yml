@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Dev
+name: Dev - CI/CD Pipeline
 
 on:
   push:
@@ -45,8 +45,8 @@ jobs:
           imageTag: ${{ needs.build.outputs.imageTag }}
           location: ${{ vars.LOCATION }}
           registryUsername: ${{ vars.REGISTRY_USERNAME }}
-          apiUrl: ${{ vars.API_URL }}
           azureCredentials: ${{ secrets.AZURE_CREDENTIALS }}
+          resourceGroup: ${{ vars.RESOURCE_GROUP }}
 
   deploy:
     runs-on: ubuntu-latest
