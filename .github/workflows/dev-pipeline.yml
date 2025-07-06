@@ -48,6 +48,7 @@ jobs:
           registryUsername: ${{ vars.REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
           azureCredentials: ${{ secrets.AZURE_CREDENTIALS }}
+          registryServer: ${{ vars.REGISTRY_SERVER }}
           resourceGroup: ${{ vars.RESOURCE_GROUP }}
 
   deploy:

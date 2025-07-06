@@ -40,9 +40,9 @@ resource app 'Microsoft.App/containerApps@2023-05-01' = {
           name: containerAppName
           image: image
           env: [
-            for pair in union({}, appSettings): {
-              name: pair.key
-              value: pair.value
+            {
+              name: 'NODE_ENV'
+              value: 'develop'
             }
           ]
         }

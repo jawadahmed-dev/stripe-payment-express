@@ -22,6 +22,9 @@ param appSettings object = {}
 @description('Azure location')
 param location string = resourceGroup().location
 
+@description('Registry server (e.g., ghcr.io)')
+param registryServer string
+
 module containerapp 'modules/container-app.bicep' = {
   name: 'containerapp'
   params: {
@@ -31,6 +34,7 @@ module containerapp 'modules/container-app.bicep' = {
     image: image
     registryUsername: registryUsername
     registryPassword: registryPassword
+    registryServer: registryServer
     appSettings: appSettings
   }
 }
