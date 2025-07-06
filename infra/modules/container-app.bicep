@@ -19,6 +19,7 @@ resource app 'Microsoft.App/containerApps@2023-05-01' = {
   properties: {
     managedEnvironmentId: env.id
     configuration: {
+       activeRevisionsMode: 'Single'
       registries: [
         {
           server: registryServer
