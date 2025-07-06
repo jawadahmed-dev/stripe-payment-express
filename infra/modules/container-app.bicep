@@ -4,8 +4,8 @@ param image string
 param location string
 param registryServer string
 param registryUsername string
-@secure() param registryPassword string
-param appSettings object
+@secure() 
+param registryPassword string
 
 resource env 'Microsoft.App/managedEnvironments@2023-05-01' = {
   name: environmentName

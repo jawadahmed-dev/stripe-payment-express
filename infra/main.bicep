@@ -16,9 +16,6 @@ param registryUsername string
 @description('GHCR PAT or token')
 param registryPassword string
 
-@description('Key-value environment variables')
-param appSettings object = {}
-
 @description('Azure location')
 param location string = resourceGroup().location
 
@@ -35,6 +32,5 @@ module containerapp 'modules/container-app.bicep' = {
     registryUsername: registryUsername
     registryPassword: registryPassword
     registryServer: registryServer
-    appSettings: appSettings
   }
 }
