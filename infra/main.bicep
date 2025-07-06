@@ -16,9 +16,6 @@ param registryUsername string
 @description('GHCR PAT or token')
 param registryPassword string
 
-@description('Registry URL')
-param registryURL string
-
 @description('Key-value environment variables')
 param appSettings object = {}
 

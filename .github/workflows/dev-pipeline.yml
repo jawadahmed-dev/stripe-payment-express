@@ -46,6 +46,7 @@ jobs:
           imageTag: ${{ needs.build.outputs.imageTag }}
           location: ${{ vars.LOCATION }}
           registryUsername: ${{ vars.REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
           azureCredentials: ${{ secrets.AZURE_CREDENTIALS }}
           resourceGroup: ${{ vars.RESOURCE_GROUP }}
 
