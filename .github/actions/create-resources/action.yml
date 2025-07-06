@@ -24,7 +24,7 @@ runs:
   steps:
     - name: Output creds
       run : |
-        echo ${{ inputs.azureCredentials }}
+        echo "${{ inputs.azureCredentials }}"
       shell: bash
 
     - name: Azure Login
@@ -39,11 +39,11 @@ runs:
           --template-file infra/main.bicep \
           --parameters containerAppName=${{ inputs.containerAppName }} \
                        environmentName=${{ inputs.environmentName }} \
-                       image="ghcr.io/${{ github.repository_owner }}/payapp:${{ inputs.imageTag }}" \
+                       image="ghcr.io/${{ inputs.registryUsername }}/payapp:${{ inputs.imageTag }}" \
                        registryUsername=${{ inputs.registryUsername }} \
-                       registryPassword=${{ inputs.REGISTRY_PASSWORD }} \
+                       registryPassword=${{ inputs.registryPassword }} \
                        appSettings='{
-                         "NODE_ENV": "production",
+                         "NODE_ENV": "develop",
                          "API_URL": "${{ inputs.apiUrl }}"
                        }'
       shell: bash
