@@ -12,6 +12,8 @@ inputs:
     required: true
   registryUsername:
     required: true
+  registryPassword:
+    required: true
   apiUrl:
     required: true
   azureCredentials:
@@ -34,7 +36,7 @@ runs:
                        environmentName=${{ inputs.environmentName }} \
                        image="ghcr.io/${{ github.repository_owner }}/payapp:${{ inputs.imageTag }}" \
                        registryUsername=${{ inputs.registryUsername }} \
-                       registryPassword=${{ secrets.REGISTRY_PASSWORD }} \
+                       registryPassword=${{ inputs.REGISTRY_PASSWORD }} \
                        appSettings='{
                          "NODE_ENV": "production",
                          "API_URL": "${{ inputs.apiUrl }}"
