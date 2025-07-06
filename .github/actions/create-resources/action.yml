@@ -24,13 +24,13 @@ runs:
   steps:
     - name: Output creds
       run : |
-        echo ${{ inputs.AZURE_CREDENTIALS }}
+        echo ${{ inputs.azureCredentials }}
       shell: bash
 
     - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ inputs.AZURE_CREDENTIALS }}
+        creds: ${{ inputs.azureCredentials }}
 
     - name: Deploy resources with Bicep
       run: |
