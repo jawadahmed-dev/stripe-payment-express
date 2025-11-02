@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Save Payment Method</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    #card-element { border: 1px solid #ccc; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+    button { padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Save Payment Method</h2>
+  <form id="payment-form">
+    <div id="card-element"></div>
+    <button type="submit">Save Payment Method</button>
+  </form>
+
+  <script>
+    // Initialize Stripe
+    const stripe = Stripe('pk_test_51NJxHkFyYmI2tpCj8pSd2z16aAeGjCuALM2iGJFkau7DIBiEy5LJbdFxmx5wT0oXbZJSlWYczwsSWnnysoYxlTuY00kL7zO5dc'); // Replace with your publishable key
+    const elements = stripe.elements();
+    const cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+
+    let clientSecret = null;
+
+    // 1. On page load, create a SetupIntent
+    window.addEventListener('load', async () => {
+        try {
+        const response = await fetch('/api/payment-methods/setup-intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+            customerId: 'cus_OIpBhe4mcjL6fP'
+            })
+        });
+
+        const data = await response.json();
+        clientSecret = data.clientSecret; // Save for later confirmation
+        console.log('SetupIntent created:', clientSecret);
+        } catch (err) {
+        console.error('Error creating SetupIntent:', err);
+        }
+    });
+
+    // 2. Handle form submission to confirm SetupIntent
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!clientSecret) {
+        alert('SetupIntent not ready yet.');
+        return;
+      }
+
+      const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
+        payment_method: { card: cardElement }
+      });
+
+      console.log('payment-confirmation ', setupIntent);
+      if (error) {
+        alert(error.message);
+      } 
+    });
+  </script>
+</body>
+</html>

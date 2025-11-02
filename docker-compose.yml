@@ -1,6 +1,29 @@
-version: '3.8'
-
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
   api:
     build:
       context: ./api
@@ -11,25 +34,37 @@ services:
     env_file:
       - ./api/.env
     volumes:
-      - ./api:/app    # Mount your local api folder into /app in the container
-      - /app/node_modules # Prevent overwriting node_modules inside container with host files
+      - ./api:/app
+      - /app/node_modules
+    networks:
+      - app-network
     depends_on:
-      - mongo
-    networks:
-      - app-network
+      rabbitmq:
+        condition: service_healthy
+      mongo:
+        condition: service_started
 
-  mongo:
-    image: mongo:6.0
-    container_name: mongo
+  event-worker:
+    build:
+      context: ./event-worker
+      dockerfile: Dockerfile
+    container_name: event-worker
     ports:
-      - "3001:27017"
+      - "3001:3001"
+    env_file:
+      - ./event-worker/.env
     volumes:
-      - mongo-data:/data/db
+      - ./event-worker:/app
+      - /app/node_modules
     networks:
       - app-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
-  mongo-data:
+  rabbitmq_data:
+  mongo_data:
 
 networks:
   app-network:

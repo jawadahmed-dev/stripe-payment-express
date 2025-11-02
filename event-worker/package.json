@@ -1,0 +1,25 @@
+{
+  "name": "event-worker",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "ts-node-dev src/index.ts"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.3.1",
+    "mongoose": "^8.3.2",
+    "tsyringe": "^4.10.0",
+    "reflect-metadata": "^0.2.2"
+
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.7",
+    "@types/dotenv": "^8.2.3",
+    "@types/node": "^24.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "@types/mongoose": "^5.11.97"
+  }
+}

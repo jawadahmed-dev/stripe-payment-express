@@ -1,0 +1,29 @@
+{
+event-worker  |   type: 'setup_intent.created',
+event-worker  |   data: {
+event-worker  |     id: 'seti_1Rv4dUFyYmI2tpCjwgQlyp3W',
+event-worker  |     object: 'setup_intent',
+event-worker  |     application: null,
+event-worker  |     automatic_payment_methods: null,
+event-worker  |     cancellation_reason: null,
+event-worker  |     client_secret: 'seti_1Rv4dUFyYmI2tpCjwgQlyp3W_secret_SqmBAN32z44h8ahnPRqXgIHjJ0uNtAt',
+event-worker  |     created: 1754952972,
+event-worker  |     customer: 'cus_OIpBhe4mcjL6fP',
+event-worker  |     description: null,
+event-worker  |     flow_directions: null,
+event-worker  |     last_setup_error: null,
+event-worker  |     latest_attempt: null,
+event-worker  |     livemode: false,
+event-worker  |     mandate: null,
+event-worker  |     metadata: {},
+event-worker  |     next_action: null,
+event-worker  |     on_behalf_of: null,
+event-worker  |     payment_method: null,
+event-worker  |     payment_method_configuration_details: null,
+event-worker  |     payment_method_options: { card: [Object] },
+event-worker  |     payment_method_types: [ 'card' ],
+event-worker  |     single_use_mandate: null,
+event-worker  |     status: 'requires_payment_method',
+event-worker  |     usage: 'off_session'
+event-worker  |   }
+event-worker  | }

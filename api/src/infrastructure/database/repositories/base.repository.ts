@@ -1,60 +1,59 @@
-import { Model, FilterQuery, UpdateQuery } from 'mongoose';
+import { Model, FilterQuery} from 'mongoose';
+import { IBaseRepository } from '../../../application/contracts/repositories/base.repository';
 
-export abstract class BaseRepository<Entity, Document> {
-  constructor(protected readonly model: Model<Document>) {}
+export abstract class BaseRepository<TEntity, TDocument>
+  implements IBaseRepository<TEntity> {
 
-  // Abstract methods to map Document <-> Entity
-  protected abstract toEntity(doc: Document): Entity;
-  protected abstract toDocument(entity: Entity): Partial<Document>;
+  constructor(protected readonly model: Model<TDocument>) {}
 
-  async findById(id: string): Promise<Entity | null> {
-    const doc = await this.model.findById(id).lean<Document>().exec();
+  protected abstract toEntity(doc: TDocument): TEntity;
+  protected abstract toDocument(entity: Partial<TEntity>): Partial<TDocument>;
+
+  async findById(id: string): Promise<TEntity | null> {
+    const doc = await this.model.findById(id).lean<TDocument>().exec();
     return doc ? this.toEntity(doc) : null;
   }
 
-  async findOne(conditions: FilterQuery<Document>): Promise<Entity | null> {
-    const doc = await this.model.findOne(conditions).lean<Document>().exec();
-    return doc ? this.toEntity(doc) : null;
+  async findAll(): Promise<TEntity[]> {
+    const docs = await this.model.find().lean<TDocument[]>().exec();
+    return docs.map(this.toEntity.bind(this));
   }
 
-  async findBy(conditions: FilterQuery<Document>): Promise<Entity[]> {
-    const docs = await this.model.find(conditions).lean<Document[]>().exec();
-    return docs.map(this.toEntity);
+  async create(entity: Partial<TEntity>): Promise<TEntity> {
+    const created = await this.model.create(this.toDocument(entity));
+    console.log("Created doc:", created);
+    return this.toEntity(created.toObject ? created.toObject() : created);
   }
 
-  async findAll(): Promise<Entity[]> {
-    const docs = await this.model.find().lean<Document[]>().exec();
-    return docs.map(this.toEntity);
+  async createMany(entities: Partial<TEntity>[]): Promise<TEntity[]> {
+    const docs = entities.map((e) => this.toDocument(e));
+    const createdDocs = await this.model.insertMany(docs);
+    return createdDocs.map((doc: any) =>
+      this.toEntity(doc.toObject ? doc.toObject() : doc)
+    );
   }
 
-  async create(entity: Entity): Promise<Entity> {
-    const docToCreate = this.toDocument(entity);
-    const createdDoc = await this.model.create(docToCreate);
-    // createdDoc may not be lean, so convert after creation
-    return this.toEntity(createdDoc.toObject ? createdDoc.toObject() : createdDoc);
-  }
-
-  async update(id: string, data: UpdateQuery<Document>): Promise<Entity | null> {
-    const updatedDoc = await this.model
-      .findByIdAndUpdate(id, data, { new: true })
-      .lean<Document>()
+  async update(id: string, update: Partial<TEntity>): Promise<TEntity | null> {
+    const updateDoc = this.toDocument(update);
+    const doc = await this.model
+      .findByIdAndUpdate(id, updateDoc, { new: true })
+      .lean<TDocument>()
       .exec();
-    return updatedDoc ? this.toEntity(updatedDoc) : null;
-  }
-
-  async updateMany(conditions: FilterQuery<Document>, data: UpdateQuery<Document>): Promise<void> {
-    await this.model.updateMany(conditions, data).exec();
+    return doc ? this.toEntity(doc) : null;
   }
 
   async delete(id: string): Promise<void> {
     await this.model.findByIdAndDelete(id).exec();
   }
 
-  async deleteMany(conditions: FilterQuery<Document>): Promise<void> {
-    await this.model.deleteMany(conditions).exec();
+  async findBy(filter: FilterQuery<TDocument>): Promise<TEntity[]> {
+    const docs = await this.model.find(filter).lean<TDocument[]>().exec();
+    return docs.map(this.toEntity.bind(this));
   }
 
-  async count(conditions: FilterQuery<Document>): Promise<number> {
-    return this.model.countDocuments(conditions).exec();
+  async findOne(filter: FilterQuery<TDocument>): Promise<TEntity | null> {
+    const doc = await this.model.findOne(filter).lean<TDocument>().exec();
+    return doc ? this.toEntity(doc) : null;
   }
 }
+

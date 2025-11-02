@@ -1,32 +1,30 @@
 // middlewares/global-error-handler.ts
+import { Request, Response, NextFunction } from "express";
+import { ApiResponse } from "../contracts/common/api-response";
 
-import { Request, Response, NextFunction } from 'express';
-import { ApiResponse } from '../utils/api-response';
-
-export async function globalErrorHandler(
+export function globalErrorHandler(
   err: unknown,
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> {
-  // Default error message and status
-  let statusCode = 500;
-  let message = 'Internal Server Error';
-  const errors: string[] = [];
+) {
+  const statusCode = 500;
+  let message = "Internal Server Error";
+  let errors: string[] = [];
 
   if (err instanceof Error) {
-    errors.push(err.message)
-  } else if (typeof err === 'string') {
-    errors.push(err)
-  }
-    // 🧠 Catch-all fallback for unknown types
-  else {
-    errors.push('Unexpected error');
+    message = err.message;
+    errors = [err.message];
+  } else if (typeof err === "string") {
+    message = err;
+    errors = [err];
+  } else {
+    errors = ["Unexpected error"];
   }
 
-  // You can log the full error for debugging (optional)
-  console.error('Unhandled error:', err);
+  console.error("Unhandled error:", err);
 
-  const apiErrorResponse = ApiResponse.error(message, errors, statusCode);
-  res.status(apiErrorResponse.statusCode).json(apiErrorResponse);
+  res
+    .status(statusCode)
+    .json(ApiResponse.error(message, errors, statusCode));
 }

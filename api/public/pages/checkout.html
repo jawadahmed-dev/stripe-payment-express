@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stripe Payment Form</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f9f9f9;
+    }
+    .payment-form {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .form-row {
+      margin-bottom: 20px;
+    }
+    #card-element {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+    }
+    #submit {
+      width: 100%;
+      padding: 12px;
+      background: #6772e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #submit:disabled {
+      background: #bbb;
+      cursor: not-allowed;
+    }
+    #error-message {
+      color: red;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-form">
+    <h2>Checkout</h2>
+    <form id="payment-form">
+      <div class="form-row">
+        <label for="card-element">Credit or Debit Card</label>
+        <div id="card-element"></div>
+        <div id="error-message"></div>
+      </div>
+      <button id="submit">Pay $25</button>
+    </form>
+  </div>
+
+  <script>
+    const stripe = Stripe("pk_test_51RRU3qPRTX3VM9dOdJ8doqUcnGQuNusuAkXv4V5HLEKnlK96hCDjDMPWbNadwavoOY8WuwtfwBFMoxVjfX2I7Lk000jdeyw7eJ"); // Replace with your publishable key
+    const elements = stripe.elements();
+    const card = elements.create("card");
+    card.mount("#card-element");
+
+    card.on("change", (event) => {
+      const displayError = document.getElementById("error-message");
+      displayError.textContent = event.error ? event.error.message : "";
+    });
+
+    const form = document.getElementById("payment-form");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      document.getElementById("submit").disabled = true;
+
+      try {
+        // Call your backend to create a PaymentIntent
+        const response = await fetch("http://localhost:3000/api/payments/create-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            currency: "usd",
+            amount: 2500, 
+            userId: "68b1f3e9ee0216454b7083d0",
+            orderId: "68b28a64cf516a6324fe855b",
+            idempotencyKey: generateUUID()
+          })
+        });
+
+        console.log(response);
+        const jsonResponse = await response.json();
+        console.log(jsonResponse.data);
+        if (!jsonResponse.data.clientSecret) {
+          alert("Error: No client secret returned");
+          return;
+        }
+
+        // Confirm the payment
+        const result = await stripe.confirmCardPayment(jsonResponse.data.clientSecret, {
+          payment_method: { card }
+        });
+
+        if (result.error) 
+        {
+          document.getElementById("error-message").textContent = result.error.message;
+        } 
+        else if (result.paymentIntent && result.paymentIntent.status === "succeeded") 
+        {
+          alert("✅ Payment Successful!");
+        }
+
+      } 
+      catch (err) 
+      {
+        console.error(err);
+        alert("Unexpected error: " + err.message);
+      } 
+      finally 
+      {
+        document.getElementById("submit").disabled = false;
+      }
+    });
+
+    function generateUUID() {
+        // Generates RFC4122 version 4 compliant UUID
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+  </script>
+</body>
+</html>

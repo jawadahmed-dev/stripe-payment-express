@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modern One-Click Pay</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script defer src="../js/one-click-pay.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 400px;
+    }
+
+    #card-element {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    select, button {
+      padding: 10px;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    hr {
+      margin: 30px 0;
+    }
+
+    #new-card-section {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💳 One-Click Pay Demo</h1>
+
+    <!-- Card Selector -->
+    <h2>1️⃣ Choose a Saved Card</h2>
+    <select id="saved-cards"></select>
+    <button id="pay-with-saved">Pay with Selected Card</button>
+    <button id="show-new-card">Use New Card</button>
+
+    <!-- Save New Card -->
+    <div id="new-card-section">
+      <hr />
+      <h2>2️⃣ Add New Card</h2>
+      <form id="new-card-form">
+        <div id="card-element"></div>
+        <button type="submit">Pay & Save Card</button>
+      </form>
+    </div>
+
+    <p id="message"></p>
+  </div>
+
+</body>
+</html>

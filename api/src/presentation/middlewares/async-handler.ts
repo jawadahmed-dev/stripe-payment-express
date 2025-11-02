@@ -1,20 +1,10 @@
-// src/utils/async-handler.ts
+// middlewares/asyncHandler.ts
+import { Request, Response, NextFunction } from "express";
 
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-
-export const asyncHandler = <
-  Params = any,
-  ResBody = any,
-  ReqBody = any,
-  ReqQuery = any
->(
-  fn: (
-    req: Request<Params, ResBody, ReqBody, ReqQuery>,
-    res: Response,
-    next: NextFunction
-  ) => Promise<any>
-): RequestHandler<Params, ResBody, ReqBody, ReqQuery> => {
-  return (req, res, next) => {
+export const asyncHandler = (
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
+) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next).catch(next);
   };
 };
